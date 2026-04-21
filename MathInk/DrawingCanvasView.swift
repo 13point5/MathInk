@@ -2,6 +2,9 @@ import PencilKit
 import SwiftUI
 
 private final class EdgeToEdgeCanvasView: PKCanvasView {
+    private let minimumCanvasSide: CGFloat = 6_000
+    private let canvasSizeMultiplier: CGFloat = 4.5
+
     override func didMoveToWindow() {
         super.didMoveToWindow()
         forceEdgeToEdgeLayout()
@@ -27,16 +30,29 @@ private final class EdgeToEdgeCanvasView: PKCanvasView {
         layoutMargins = .zero
         directionalLayoutMargins = .zero
 
-        let minimumContentSize = CGSize(
-            width: max(bounds.width, 1),
-            height: max(bounds.height, 1)
+        isScrollEnabled = true
+        alwaysBounceVertical = true
+        alwaysBounceHorizontal = true
+        bouncesZoom = true
+        minimumZoomScale = 0.1
+        maximumZoomScale = 4
+        showsVerticalScrollIndicator = false
+        showsHorizontalScrollIndicator = false
+
+        let targetContentSize = CGSize(
+            width: max(bounds.width * canvasSizeMultiplier, minimumCanvasSide),
+            height: max(bounds.height * canvasSizeMultiplier, minimumCanvasSide)
         )
 
-        if contentSize.width < minimumContentSize.width || contentSize.height < minimumContentSize.height {
+        if contentSize.width < targetContentSize.width || contentSize.height < targetContentSize.height {
             contentSize = CGSize(
-                width: max(contentSize.width, minimumContentSize.width),
-                height: max(contentSize.height, minimumContentSize.height)
+                width: max(contentSize.width, targetContentSize.width),
+                height: max(contentSize.height, targetContentSize.height)
             )
+        }
+
+        if zoomScale < minimumZoomScale || zoomScale > maximumZoomScale {
+            setZoomScale(min(max(zoomScale, minimumZoomScale), maximumZoomScale), animated: false)
         }
 
         let maximumOffset = CGPoint(
@@ -56,6 +72,7 @@ private final class EdgeToEdgeCanvasView: PKCanvasView {
 
 struct DrawingCanvasView: UIViewRepresentable {
     @Binding var drawingData: Data
+    @Binding var zoomScale: CGFloat
     @ObservedObject var canvasBridge: CanvasBridge
     let onDrawingChange: (Data) -> Void
 
@@ -69,8 +86,6 @@ struct DrawingCanvasView: UIViewRepresentable {
         canvasView.backgroundColor = .clear
         canvasView.isOpaque = false
         canvasView.drawingPolicy = .anyInput
-        canvasView.alwaysBounceVertical = true
-        canvasView.alwaysBounceHorizontal = true
         canvasView.tool = PKInkingTool(.pen, color: .systemBlue, width: 6)
         canvasView.forceEdgeToEdgeLayout()
 
@@ -111,6 +126,19 @@ struct DrawingCanvasView: UIViewRepresentable {
 
         func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
             parent.onDrawingChange(canvasView.drawing.dataRepresentation())
+        }
+
+        func scrollViewDidZoom(_ scrollView: UIScrollView) {
+            reportZoomScale(scrollView.zoomScale)
+        }
+
+        func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
+            reportZoomScale(scale)
+        }
+
+        func reportZoomScale(_ scale: CGFloat) {
+            guard abs(parent.zoomScale - scale) > 0.001 else { return }
+            parent.zoomScale = scale
         }
     }
 }

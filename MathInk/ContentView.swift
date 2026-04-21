@@ -16,6 +16,8 @@ struct ContentView: View {
     @State private var renamingNoteID: UUID?
     @State private var renameTitle = ""
     @State private var notePendingDeletionID: UUID?
+    @State private var boardZoomScale: CGFloat = 1
+    private let zoomPresetScales: [CGFloat] = [0.1, 0.25, 0.5, 0.75, 1, 2, 4]
 
     private var renameAlertBinding: Binding<Bool> {
         Binding(
@@ -154,23 +156,13 @@ struct ContentView: View {
                     get: { note.drawingData },
                     set: { updateDrawing(for: note, with: $0) }
                 ),
+                zoomScale: $boardZoomScale,
                 canvasBridge: canvasBridge
             ) { updatedData in
                 updateDrawing(for: note, with: updatedData)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .ignoresSafeArea()
-            .overlay(alignment: .bottom) {
-                StylePanel(
-                    canvasBridge: canvasBridge,
-                    startListening: {
-                        Task {
-                            await voiceController.toggleListening(trigger: "the style panel mic")
-                        }
-                    }
-                )
-                .padding(.bottom, 8)
-            }
             .onPencilDoubleTap { _ in
                 Task {
                     await voiceController.toggleListening(trigger: "Apple Pencil double tap")
@@ -191,12 +183,19 @@ struct ContentView: View {
                     .padding(.top, 132)
             }
 
+            boardBottomControls
+
             boardTopBar(for: note)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .ignoresSafeArea(.container, edges: .bottom)
         .background(Color.white)
         .environment(\.colorScheme, .light)
         .toolbar(.hidden, for: .navigationBar)
         .navigationBarBackButtonHidden(true)
+        .onAppear {
+            boardZoomScale = 1
+        }
     }
 
     private var missingBoardView: some View {
@@ -271,6 +270,60 @@ struct ContentView: View {
 
     private var shouldShowStatusPanel: Bool {
         voiceController.isListening || !voiceController.transcript.isEmpty
+    }
+
+    private var boardBottomControls: some View {
+        ZStack {
+            StylePanel(
+                canvasBridge: canvasBridge,
+                startListening: {
+                    Task {
+                        await voiceController.toggleListening(trigger: "the style panel mic")
+                    }
+                }
+            )
+            .frame(maxWidth: .infinity, alignment: .center)
+
+            zoomLevelBadge
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(.horizontal, 14)
+        .padding(.bottom, 8)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+        .ignoresSafeArea(.container, edges: .bottom)
+    }
+
+    private var zoomLevelBadge: some View {
+        Menu {
+            Button(action: zoomToFitContent) {
+                Label("Zoom to Fit Content", systemImage: "arrow.up.left.and.arrow.down.right")
+            }
+
+            Divider()
+
+            ForEach(zoomPresetScales, id: \.self) { scale in
+                Button {
+                    setBoardZoom(scale)
+                } label: {
+                    if isCurrentZoom(scale) {
+                        Label(zoomTitle(for: scale), systemImage: "checkmark")
+                    } else {
+                        Text(zoomTitle(for: scale))
+                    }
+                }
+            }
+        } label: {
+            Text(zoomTitle(for: boardZoomScale))
+                .font(.callout)
+                .monospacedDigit()
+                .foregroundStyle(.primary)
+                .padding(.horizontal, 16)
+                .frame(height: 44)
+                .nativeGlassCapsule()
+                .contentShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Zoom \(zoomTitle(for: boardZoomScale))")
     }
 
     private var floatingStatusPanel: some View {
@@ -406,6 +459,24 @@ struct ContentView: View {
             voiceController.transcript = commandText
             voiceController.statusMessage = "Could not parse \"\(commandText)\". Try red pen, blue pencil, yellow marker, or eraser."
         }
+    }
+
+    private func setBoardZoom(_ scale: CGFloat) {
+        boardZoomScale = canvasBridge.setZoomScale(scale) ?? scale
+    }
+
+    private func zoomToFitContent() {
+        if let fittedScale = canvasBridge.zoomToFitContent() {
+            boardZoomScale = fittedScale
+        }
+    }
+
+    private func zoomTitle(for scale: CGFloat) -> String {
+        "\(Int((scale * 100).rounded()))%"
+    }
+
+    private func isCurrentZoom(_ scale: CGFloat) -> Bool {
+        abs(boardZoomScale - scale) < 0.01
     }
 }
 

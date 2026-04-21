@@ -53,8 +53,7 @@ struct StylePanel: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 8)
-        .background(.ultraThinMaterial, in: Capsule())
-        .shadow(color: .black.opacity(0.14), radius: 18, y: 8)
+        .stylePanelGlass()
     }
 }
 
@@ -97,5 +96,18 @@ private struct ColorChip: View {
                     .stroke(.primary.opacity(isSelected ? 0.9 : 0), lineWidth: 3)
                     .padding(-5)
             }
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func stylePanelGlass() -> some View {
+        if #available(iOS 26.0, *) {
+            glassEffect(.regular.interactive(), in: Capsule())
+                .shadow(color: .black.opacity(0.08), radius: 12, y: 5)
+        } else {
+            background(.ultraThinMaterial, in: Capsule())
+                .shadow(color: .black.opacity(0.14), radius: 18, y: 8)
+        }
     }
 }
