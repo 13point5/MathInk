@@ -70,7 +70,7 @@ private struct ToolChip: View {
     @State private var selectionPulse = false
 
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
+        ZStack {
             Image(systemName: symbolName)
                 .font(.body)
                 .foregroundStyle(.primary)
@@ -78,20 +78,8 @@ private struct ToolChip: View {
                 .background(chipBackground, in: Circle())
                 .overlay {
                     Circle()
-                        .stroke(selectionColor, lineWidth: isSelected ? 3 : 0)
+                        .stroke(chipRingColor, lineWidth: chipRingWidth)
                 }
-
-            if let color {
-                Circle()
-                    .fill(Color(uiColor: color.uiColor))
-                    .frame(width: 12, height: 12)
-                    .overlay {
-                        Circle()
-                            .stroke(Color(uiColor: .systemBackground), lineWidth: 1.5)
-                    }
-                    .shadow(color: .black.opacity(0.18), radius: 2, y: 1)
-                    .offset(x: 1, y: 1)
-            }
         }
         .transaction { transaction in
             transaction.disablesAnimations = true
@@ -124,23 +112,27 @@ private struct ToolChip: View {
     }
 
     private var chipBackground: Color {
-        guard isSelected, let color else {
-            return Color(uiColor: .secondarySystemBackground)
+        guard let color else {
+            return isSelected ? .primary.opacity(0.12) : Color(uiColor: .secondarySystemBackground)
         }
 
-        return Color(uiColor: color.uiColor).opacity(0.18)
+        return Color(uiColor: color.uiColor).opacity(isSelected ? 0.24 : 0.1)
     }
 
-    private var selectionColor: Color {
-        guard isSelected else {
-            return .clear
+    private var chipRingColor: Color {
+        guard let color else {
+            return isSelected ? .primary.opacity(0.7) : .clear
         }
 
-        if let color {
-            return Color(uiColor: color.uiColor)
+        return Color(uiColor: color.uiColor).opacity(isSelected ? 0.95 : 0.56)
+    }
+
+    private var chipRingWidth: CGFloat {
+        guard color != nil else {
+            return isSelected ? 2.5 : 0
         }
 
-        return .primary.opacity(0.72)
+        return isSelected ? 3 : 1.5
     }
 
     private func pulseSelection() {
