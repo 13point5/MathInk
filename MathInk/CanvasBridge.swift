@@ -4,8 +4,14 @@ import PencilKit
 @MainActor
 final class CanvasBridge: ObservableObject {
     @Published private(set) var selectedCommand = InkCommand(tool: .pen, color: .blue)
+    @Published private var toolColors: [InkCommand.ToolKind: InkCommand.NamedColor] = [
+        .pen: .blue,
+        .pencil: .black,
+        .marker: .yellow
+    ]
 
     weak var canvasView: PKCanvasView?
+    private var lastDrawingTool = InkCommand.ToolKind.pen
 
     func attach(canvasView: PKCanvasView) {
         self.canvasView = canvasView
@@ -13,21 +19,36 @@ final class CanvasBridge: ObservableObject {
     }
 
     func apply(command: InkCommand) {
-        selectedCommand = command
+        let commandToApply = command.resolved(using: rememberedColor(for: command.tool))
+        rememberColorIfNeeded(for: commandToApply)
+        selectedCommand = commandToApply
         guard let canvasView else { return }
 
-        canvasView.tool = command.makePKTool()
+        canvasView.tool = commandToApply.makePKTool()
         canvasView.becomeFirstResponder()
     }
 
     func selectTool(_ tool: InkCommand.ToolKind) {
-        let color = tool == .eraser ? nil : selectedCommand.color ?? .blue
-        apply(command: InkCommand(tool: tool, color: color))
+        apply(command: InkCommand(tool: tool, color: rememberedColor(for: tool)))
     }
 
     func selectColor(_ color: InkCommand.NamedColor) {
-        let tool = selectedCommand.tool == .eraser ? InkCommand.ToolKind.pen : selectedCommand.tool
+        let tool = selectedCommand.tool.usesColor ? selectedCommand.tool : lastDrawingTool
         apply(command: InkCommand(tool: tool, color: color))
+    }
+
+    func rememberedColor(for tool: InkCommand.ToolKind) -> InkCommand.NamedColor? {
+        guard tool.usesColor else { return nil }
+        return toolColors[tool] ?? tool.defaultColor
+    }
+
+    private func rememberColorIfNeeded(for command: InkCommand) {
+        guard command.tool.usesColor, let color = command.color else { return }
+
+        var updatedColors = toolColors
+        updatedColors[command.tool] = color
+        toolColors = updatedColors
+        lastDrawingTool = command.tool
     }
 
     @discardableResult
@@ -86,6 +107,35 @@ final class CanvasBridge: ObservableObject {
         )
 
         canvasView.zoom(to: proposedRect.clamped(to: canvasView.contentSize), animated: animated)
+    }
+}
+
+private extension InkCommand {
+    func resolved(using rememberedColor: InkCommand.NamedColor?) -> InkCommand {
+        guard tool.usesColor else {
+            return InkCommand(tool: tool, color: nil)
+        }
+
+        return InkCommand(tool: tool, color: color ?? rememberedColor ?? tool.defaultColor)
+    }
+}
+
+private extension InkCommand.ToolKind {
+    var usesColor: Bool {
+        self != .eraser
+    }
+
+    var defaultColor: InkCommand.NamedColor? {
+        switch self {
+        case .pen:
+            return .blue
+        case .pencil:
+            return .black
+        case .marker:
+            return .yellow
+        case .eraser:
+            return nil
+        }
     }
 }
 

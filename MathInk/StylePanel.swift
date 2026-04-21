@@ -5,21 +5,24 @@ struct StylePanel: View {
     let startListening: () -> Void
 
     private let toolChoices: [InkCommand.ToolKind] = [.pen, .pencil, .marker, .eraser]
-    private let colorChoices: [InkCommand.NamedColor] = [.black, .blue, .green, .yellow, .red, .purple]
+    private let colorChoices: [InkCommand.NamedColor] = [.black, .blue, .green, .yellow, .orange, .red, .purple]
 
     var body: some View {
         HStack(spacing: 12) {
             ForEach(toolChoices, id: \.self) { tool in
                 Button {
-                    canvasBridge.selectTool(tool)
+                    performWithoutToolbarAnimation {
+                        canvasBridge.selectTool(tool)
+                    }
                 } label: {
                     ToolChip(
                         tool: tool,
+                        color: canvasBridge.rememberedColor(for: tool),
                         isSelected: canvasBridge.selectedCommand.tool == tool
                     )
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel(tool.rawValue.capitalized)
+                .accessibilityLabel(toolAccessibilityLabel(for: tool))
             }
 
             Divider()
@@ -27,7 +30,9 @@ struct StylePanel: View {
 
             ForEach(colorChoices, id: \.self) { color in
                 Button {
-                    canvasBridge.selectColor(color)
+                    performWithoutToolbarAnimation {
+                        canvasBridge.selectColor(color)
+                    }
                 } label: {
                     ColorChip(
                         color: color,
@@ -54,19 +59,55 @@ struct StylePanel: View {
         .padding(.horizontal, 14)
         .padding(.vertical, 8)
         .stylePanelGlass()
+        .animation(nil, value: canvasBridge.selectedCommand)
     }
 }
 
 private struct ToolChip: View {
     let tool: InkCommand.ToolKind
+    let color: InkCommand.NamedColor?
     let isSelected: Bool
+    @State private var selectionPulse = false
 
     var body: some View {
-        Image(systemName: symbolName)
-            .font(.body)
-            .foregroundStyle(isSelected ? .white : .primary)
-            .frame(width: 36, height: 36)
-            .background(isSelected ? Color.accentColor : Color(uiColor: .secondarySystemBackground), in: Circle())
+        ZStack(alignment: .bottomTrailing) {
+            Image(systemName: symbolName)
+                .font(.body)
+                .foregroundStyle(.primary)
+                .frame(width: 36, height: 36)
+                .background(chipBackground, in: Circle())
+                .overlay {
+                    Circle()
+                        .stroke(selectionColor, lineWidth: isSelected ? 3 : 0)
+                }
+
+            if let color {
+                Circle()
+                    .fill(Color(uiColor: color.uiColor))
+                    .frame(width: 12, height: 12)
+                    .overlay {
+                        Circle()
+                            .stroke(Color(uiColor: .systemBackground), lineWidth: 1.5)
+                    }
+                    .shadow(color: .black.opacity(0.18), radius: 2, y: 1)
+                    .offset(x: 1, y: 1)
+            }
+        }
+        .transaction { transaction in
+            transaction.disablesAnimations = true
+            transaction.animation = nil
+        }
+        .frame(width: 40, height: 40)
+        .scaleEffect(selectionPulse ? 1.08 : 1)
+        .animation(.spring(response: 0.18, dampingFraction: 0.62), value: selectionPulse)
+        .onChange(of: isSelected) { _, newValue in
+            guard newValue else {
+                selectionPulse = false
+                return
+            }
+
+            pulseSelection()
+        }
     }
 
     private var symbolName: String {
@@ -79,6 +120,47 @@ private struct ToolChip: View {
             return "highlighter"
         case .eraser:
             return "eraser"
+        }
+    }
+
+    private var chipBackground: Color {
+        guard isSelected, let color else {
+            return Color(uiColor: .secondarySystemBackground)
+        }
+
+        return Color(uiColor: color.uiColor).opacity(0.18)
+    }
+
+    private var selectionColor: Color {
+        guard isSelected else {
+            return .clear
+        }
+
+        if let color {
+            return Color(uiColor: color.uiColor)
+        }
+
+        return .primary.opacity(0.72)
+    }
+
+    private func pulseSelection() {
+        var transaction = Transaction()
+        transaction.disablesAnimations = true
+
+        withTransaction(transaction) {
+            selectionPulse = false
+        }
+
+        DispatchQueue.main.async {
+            withAnimation(.spring(response: 0.18, dampingFraction: 0.62)) {
+                selectionPulse = true
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
+                withAnimation(.spring(response: 0.22, dampingFraction: 0.86)) {
+                    selectionPulse = false
+                }
+            }
         }
     }
 }
@@ -96,6 +178,10 @@ private struct ColorChip: View {
                     .stroke(.primary.opacity(isSelected ? 0.9 : 0), lineWidth: 3)
                     .padding(-5)
             }
+            .transaction { transaction in
+                transaction.disablesAnimations = true
+                transaction.animation = nil
+            }
     }
 }
 
@@ -103,11 +189,33 @@ private extension View {
     @ViewBuilder
     func stylePanelGlass() -> some View {
         if #available(iOS 26.0, *) {
-            glassEffect(.regular.interactive(), in: Capsule())
+            background {
+                Capsule()
+                    .fill(Color.clear)
+                    .glassEffect(.regular, in: Capsule())
+            }
                 .shadow(color: .black.opacity(0.08), radius: 12, y: 5)
         } else {
             background(.ultraThinMaterial, in: Capsule())
                 .shadow(color: .black.opacity(0.14), radius: 18, y: 8)
         }
+    }
+}
+
+private extension StylePanel {
+    func performWithoutToolbarAnimation(_ action: () -> Void) {
+        var transaction = Transaction()
+        transaction.disablesAnimations = true
+        transaction.animation = nil
+
+        withTransaction(transaction, action)
+    }
+
+    func toolAccessibilityLabel(for tool: InkCommand.ToolKind) -> String {
+        guard let color = canvasBridge.rememberedColor(for: tool) else {
+            return tool.rawValue.capitalized
+        }
+
+        return "\(color.rawValue.capitalized) \(tool.rawValue.capitalized)"
     }
 }
