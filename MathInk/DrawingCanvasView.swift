@@ -73,6 +73,7 @@ private final class EdgeToEdgeCanvasView: PKCanvasView {
 struct DrawingCanvasView: UIViewRepresentable {
     @Binding var drawingData: Data
     @Binding var zoomScale: CGFloat
+    @Binding var contentOffset: CGPoint
     @ObservedObject var canvasBridge: CanvasBridge
     let onDrawingChange: (Data) -> Void
 
@@ -130,15 +131,29 @@ struct DrawingCanvasView: UIViewRepresentable {
 
         func scrollViewDidZoom(_ scrollView: UIScrollView) {
             reportZoomScale(scrollView.zoomScale)
+            reportContentOffset(scrollView.contentOffset)
         }
 
         func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
             reportZoomScale(scale)
+            reportContentOffset(scrollView.contentOffset)
+        }
+
+        func scrollViewDidScroll(_ scrollView: UIScrollView) {
+            reportContentOffset(scrollView.contentOffset)
         }
 
         func reportZoomScale(_ scale: CGFloat) {
             guard abs(parent.zoomScale - scale) > 0.001 else { return }
             parent.zoomScale = scale
+        }
+
+        func reportContentOffset(_ offset: CGPoint) {
+            let deltaX = abs(parent.contentOffset.x - offset.x)
+            let deltaY = abs(parent.contentOffset.y - offset.y)
+            guard deltaX > 0.25 || deltaY > 0.25 else { return }
+
+            parent.contentOffset = offset
         }
     }
 }

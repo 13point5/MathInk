@@ -17,6 +17,7 @@ struct ContentView: View {
     @State private var renameTitle = ""
     @State private var notePendingDeletionID: UUID?
     @State private var boardZoomScale: CGFloat = 1
+    @State private var boardContentOffset: CGPoint = .zero
     private let zoomPresetScales: [CGFloat] = [0.1, 0.25, 0.5, 0.75, 1, 2, 4]
 
     private var renameAlertBinding: Binding<Bool> {
@@ -148,7 +149,10 @@ struct ContentView: View {
 
     private func board(for note: SketchNote) -> some View {
         ZStack(alignment: .top) {
-            DotGridView()
+            DotGridView(
+                zoomScale: boardZoomScale,
+                contentOffset: boardContentOffset
+            )
                 .ignoresSafeArea()
 
             DrawingCanvasView(
@@ -157,6 +161,7 @@ struct ContentView: View {
                     set: { updateDrawing(for: note, with: $0) }
                 ),
                 zoomScale: $boardZoomScale,
+                contentOffset: $boardContentOffset,
                 canvasBridge: canvasBridge
             ) { updatedData in
                 updateDrawing(for: note, with: updatedData)
@@ -195,6 +200,7 @@ struct ContentView: View {
         .navigationBarBackButtonHidden(true)
         .onAppear {
             boardZoomScale = 1
+            boardContentOffset = .zero
         }
     }
 
@@ -538,14 +544,23 @@ private struct BoardThumbnail: View {
 }
 
 private struct DotGridView: View {
+    let zoomScale: CGFloat
+    let contentOffset: CGPoint
+
     var body: some View {
         Canvas { context, size in
-            let spacing: CGFloat = 32
-            let dotSize: CGFloat = 2.4
+            let baseSpacing: CGFloat = 32
+            let gridOrigin = CGPoint(x: 8, y: 4)
+            let zoom = max(zoomScale, 0.001)
+            let logicalSpacing = gridSpacing(for: zoom, baseSpacing: baseSpacing)
+            let screenSpacing = logicalSpacing * zoom
+            let dotSize = min(max(2.2 * sqrt(zoom), 0.9), 3.4)
             let dotColor = Color(white: 0.72)
+            let firstX = positiveRemainder(gridOrigin.x * zoom - contentOffset.x, dividedBy: screenSpacing)
+            let firstY = positiveRemainder(gridOrigin.y * zoom - contentOffset.y, dividedBy: screenSpacing)
 
-            for x in stride(from: CGFloat(8), through: size.width, by: spacing) {
-                for y in stride(from: CGFloat(4), through: size.height, by: spacing) {
+            for x in stride(from: firstX, through: size.width + screenSpacing, by: screenSpacing) {
+                for y in stride(from: firstY, through: size.height + screenSpacing, by: screenSpacing) {
                     let rect = CGRect(
                         x: x - dotSize / 2,
                         y: y - dotSize / 2,
@@ -557,6 +572,23 @@ private struct DotGridView: View {
             }
         }
         .background(Color.white)
+    }
+
+    private func gridSpacing(for zoom: CGFloat, baseSpacing: CGFloat) -> CGFloat {
+        var spacing = baseSpacing
+
+        while spacing * zoom < 12 {
+            spacing *= 2
+        }
+
+        return spacing
+    }
+
+    private func positiveRemainder(_ value: CGFloat, dividedBy divisor: CGFloat) -> CGFloat {
+        guard divisor > 0 else { return 0 }
+
+        let remainder = value.truncatingRemainder(dividingBy: divisor)
+        return remainder >= 0 ? remainder : remainder + divisor
     }
 }
 
