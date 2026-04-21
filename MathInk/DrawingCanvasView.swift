@@ -66,7 +66,8 @@ struct DrawingCanvasView: UIViewRepresentable {
     func makeUIView(context: Context) -> PKCanvasView {
         let canvasView = EdgeToEdgeCanvasView()
         canvasView.delegate = context.coordinator
-        canvasView.backgroundColor = .systemBackground
+        canvasView.backgroundColor = .clear
+        canvasView.isOpaque = false
         canvasView.drawingPolicy = .anyInput
         canvasView.alwaysBounceVertical = true
         canvasView.alwaysBounceHorizontal = true

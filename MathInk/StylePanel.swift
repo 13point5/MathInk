@@ -8,7 +8,7 @@ struct StylePanel: View {
     private let colorChoices: [InkCommand.NamedColor] = [.black, .blue, .green, .yellow, .red, .purple]
 
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 12) {
             ForEach(toolChoices, id: \.self) { tool in
                 Button {
                     canvasBridge.selectTool(tool)
@@ -23,7 +23,7 @@ struct StylePanel: View {
             }
 
             Divider()
-                .frame(height: 36)
+                .frame(height: 30)
 
             ForEach(colorChoices, id: \.self) { color in
                 Button {
@@ -39,22 +39,22 @@ struct StylePanel: View {
             }
 
             Divider()
-                .frame(height: 36)
+                .frame(height: 30)
 
             Button(action: startListening) {
                 Label("Voice", systemImage: "mic.fill")
                     .labelStyle(.iconOnly)
-                    .font(.title3)
-                    .frame(width: 44, height: 44)
+                    .font(.body)
+                    .frame(width: 36, height: 36)
                     .background(.blue.opacity(0.16), in: Circle())
             }
             .buttonStyle(.plain)
             .accessibilityLabel("Voice Tool")
         }
-        .padding(.horizontal, 18)
-        .padding(.vertical, 12)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
         .background(.ultraThinMaterial, in: Capsule())
-        .shadow(color: .black.opacity(0.18), radius: 24, y: 10)
+        .shadow(color: .black.opacity(0.14), radius: 18, y: 8)
     }
 }
 
@@ -64,9 +64,9 @@ private struct ToolChip: View {
 
     var body: some View {
         Image(systemName: symbolName)
-            .font(.title3)
+            .font(.body)
             .foregroundStyle(isSelected ? .white : .primary)
-            .frame(width: 44, height: 44)
+            .frame(width: 36, height: 36)
             .background(isSelected ? Color.accentColor : Color(uiColor: .secondarySystemBackground), in: Circle())
     }
 
@@ -91,7 +91,7 @@ private struct ColorChip: View {
     var body: some View {
         Circle()
             .fill(Color(uiColor: color.uiColor))
-            .frame(width: 34, height: 34)
+            .frame(width: 28, height: 28)
             .overlay {
                 Circle()
                     .stroke(.primary.opacity(isSelected ? 0.9 : 0), lineWidth: 3)
@@ -99,4 +99,3 @@ private struct ColorChip: View {
             }
     }
 }
-

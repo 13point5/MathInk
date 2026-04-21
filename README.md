@@ -1,12 +1,13 @@
 # MathInk
 
-MathInk is a native iPad sketching app for fast handwritten math notes. It pairs a full-bleed `PencilKit` canvas with a native SwiftUI sidebar, local sketch persistence, and quick tool switching from a bottom style panel, voice commands, or Apple Pencil gestures.
+MathInk is a native iPad sketching app for fast handwritten math notes. It pairs a Freeform-style board gallery with a full-bleed `PencilKit` canvas, local sketch persistence, and quick tool switching from a bottom style panel, voice commands, or Apple Pencil gestures.
 
 ## Features
 
 - Native iPad app built with `SwiftUI`.
 - Edge-to-edge `PencilKit` drawing canvas for Apple Pencil or touch input.
-- Native `NavigationSplitView` sidebar for creating, selecting, and deleting sketches.
+- Freeform-style board gallery with searchable board cards and drawing thumbnails.
+- Light board surface with a dotted grid, floating title controls, and a board options menu.
 - Local sketch storage with `SwiftData`.
 - Floating style panel with pen, pencil, marker, eraser, color, and microphone controls.
 - Voice tool commands such as `red pen`, `blue pencil`, `yellow marker`, and `eraser`.
@@ -32,7 +33,9 @@ On first launch, allow microphone and speech recognition access if you want voic
 
 ## Use The App
 
-- Tap `New Sketch` in the sidebar to create another board.
+- Tap the compose button in the board gallery to create another board.
+- Tap a board card to open it.
+- Use the title menu next to the board name to rename, duplicate, or delete the board.
 - Draw directly on the canvas with Apple Pencil or touch.
 - Use the bottom style panel to change tools and colors.
 - Tap the mic button, or use Apple Pencil double tap/squeeze, then say a command like `blue pencil`.
