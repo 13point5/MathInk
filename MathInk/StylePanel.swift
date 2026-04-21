@@ -2,6 +2,8 @@ import SwiftUI
 
 struct StylePanel: View {
     @ObservedObject var canvasBridge: CanvasBridge
+    let isListening: Bool
+    let audioLevels: [CGFloat]
     let startListening: () -> Void
 
     private let toolChoices: [InkCommand.ToolKind] = [.pen, .pencil, .marker, .eraser]
@@ -47,19 +49,69 @@ struct StylePanel: View {
                 .frame(height: 30)
 
             Button(action: startListening) {
-                Label("Voice", systemImage: "mic.fill")
-                    .labelStyle(.iconOnly)
-                    .font(.body)
-                    .frame(width: 36, height: 36)
-                    .background(.blue.opacity(0.16), in: Circle())
+                VoiceButtonLabel(isListening: isListening, audioLevels: audioLevels)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("Voice Tool")
+            .accessibilityLabel(isListening ? "Stop Listening" : "Voice Tool")
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 8)
         .stylePanelGlass()
         .animation(nil, value: canvasBridge.selectedCommand)
+    }
+}
+
+private struct VoiceButtonLabel: View {
+    let isListening: Bool
+    let audioLevels: [CGFloat]
+
+    var body: some View {
+        ZStack {
+            Image(systemName: "mic.fill")
+                .font(.body)
+                .foregroundStyle(.primary)
+                .scaleEffect(isListening ? 0.72 : 1)
+                .opacity(isListening ? 0 : 1)
+
+            VoiceWaveform(levels: audioLevels)
+                .scaleEffect(isListening ? 1 : 0.72)
+                .opacity(isListening ? 1 : 0)
+        }
+        .frame(width: 36, height: 36)
+        .background(backgroundColor, in: Circle())
+        .overlay {
+            Circle()
+                .stroke(.blue.opacity(isListening ? 0.8 : 0), lineWidth: 2)
+        }
+        .animation(.easeInOut(duration: 0.18), value: isListening)
+    }
+
+    private var backgroundColor: Color {
+        .blue.opacity(isListening ? 0.22 : 0.16)
+    }
+}
+
+private struct VoiceWaveform: View {
+    private let bars: [CGFloat] = [0.5, 0.86, 1, 0.68, 0.92]
+    let levels: [CGFloat]
+
+    var body: some View {
+        HStack(alignment: .center, spacing: 2) {
+            ForEach(bars.indices, id: \.self) { index in
+                Capsule(style: .continuous)
+                    .fill(Color.blue)
+                    .frame(width: 3, height: barHeight(for: index))
+            }
+        }
+        .frame(width: 22, height: 22)
+        .animation(.interactiveSpring(response: 0.11, dampingFraction: 0.72), value: levels)
+    }
+
+    private func barHeight(for index: Int) -> CGFloat {
+        let level = index < levels.count ? min(max(levels[index], 0), 1) : 0
+        let shapedLevel = pow(level, 0.38)
+
+        return 4 + 24 * shapedLevel * bars[index]
     }
 }
 

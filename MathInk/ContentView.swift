@@ -18,7 +18,11 @@ struct ContentView: View {
     @State private var notePendingDeletionID: UUID?
     @State private var boardZoomScale: CGFloat = 1
     @State private var boardContentOffset: CGPoint = .zero
+    @State private var voiceStatusNoteID: UUID?
+    @State private var stylePanelWidth: CGFloat = 0
     private let zoomPresetScales: [CGFloat] = [0.1, 0.25, 0.5, 0.75, 1, 2, 4]
+    private let voiceToastWidth: CGFloat = 178
+    private let voiceToastSpacing: CGFloat = 10
 
     private var renameAlertBinding: Binding<Bool> {
         Binding(
@@ -57,12 +61,19 @@ struct ContentView: View {
         .preferredColorScheme(path.isEmpty ? .dark : .light)
         .task {
             seedStarterNoteIfNeeded()
-            voiceController.onCommand = { command in
-                canvasBridge.apply(command: command)
-            }
         }
         .onChange(of: notes.map(\.id)) { _, ids in
             path.removeAll { !ids.contains($0) }
+        }
+        .onChange(of: path) { _, newPath in
+            guard
+                let voiceStatusNoteID,
+                newPath.last != voiceStatusNoteID
+            else {
+                return
+            }
+
+            clearVoiceStatus()
         }
         .alert("Rename Board", isPresented: renameAlertBinding) {
             TextField("Board Name", text: $renameTitle)
@@ -169,26 +180,15 @@ struct ContentView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .ignoresSafeArea()
             .onPencilDoubleTap { _ in
-                Task {
-                    await voiceController.toggleListening(trigger: "Apple Pencil double tap")
-                }
+                toggleVoiceListening(for: note, trigger: "Apple Pencil double tap")
             }
             .onPencilSqueeze { phase in
                 guard case .ended = phase else { return }
 
-                Task {
-                    await voiceController.toggleListening(trigger: "Apple Pencil squeeze")
-                }
+                toggleVoiceListening(for: note, trigger: "Apple Pencil squeeze")
             }
 
-            if shouldShowStatusPanel {
-                floatingStatusPanel
-                    .frame(maxWidth: 760)
-                    .padding(.horizontal, 24)
-                    .padding(.top, 132)
-            }
-
-            boardBottomControls
+            boardBottomControls(for: note)
 
             boardTopBar(for: note)
         }
@@ -274,29 +274,65 @@ struct ContentView: View {
         }
     }
 
-    private var shouldShowStatusPanel: Bool {
-        voiceController.isListening || !voiceController.transcript.isEmpty
+    private func shouldShowVoiceToast(for note: SketchNote) -> Bool {
+        voiceStatusNoteID == note.id && voiceController.isStatusVisible
     }
 
-    private var boardBottomControls: some View {
-        ZStack {
-            StylePanel(
-                canvasBridge: canvasBridge,
-                startListening: {
-                    Task {
-                        await voiceController.toggleListening(trigger: "the style panel mic")
-                    }
-                }
-            )
-            .frame(maxWidth: .infinity, alignment: .center)
+    private func boardBottomControls(for note: SketchNote) -> some View {
+        VStack(spacing: 0) {
+            Spacer(minLength: 0)
 
-            zoomLevelBadge
-                .frame(maxWidth: .infinity, alignment: .leading)
+            GeometryReader { proxy in
+                let toastSlotWidth = voiceToastSlotWidth(for: proxy.size.width)
+                let toastSpacing = toastSlotWidth > 0 ? voiceToastSpacing : 0
+
+                ZStack {
+                    HStack(spacing: toastSpacing) {
+                        Color.clear
+                            .frame(width: toastSlotWidth)
+                            .allowsHitTesting(false)
+
+                        StylePanel(
+                            canvasBridge: canvasBridge,
+                            isListening: voiceStatusNoteID == note.id && voiceController.isListening,
+                            audioLevels: voiceStatusNoteID == note.id ? voiceController.audioLevels : [],
+                            startListening: {
+                                toggleVoiceListening(for: note, trigger: "the style panel mic")
+                            }
+                        )
+                        .fixedSize()
+                        .measuredWidth($stylePanelWidth)
+
+                        if shouldShowVoiceToast(for: note), toastSlotWidth > 0 {
+                            voiceToast(for: note, width: toastSlotWidth)
+                                .transition(.opacity)
+                        } else {
+                            Color.clear
+                                .frame(width: toastSlotWidth)
+                                .allowsHitTesting(false)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .animation(.easeOut(duration: 0.16), value: shouldShowVoiceToast(for: note))
+
+                    zoomLevelBadge
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(.horizontal, 14)
+                .padding(.bottom, 0)
+                .frame(width: proxy.size.width, height: proxy.size.height, alignment: .bottom)
+            }
+            .frame(height: 76)
         }
-        .padding(.horizontal, 14)
-        .padding(.bottom, 8)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         .ignoresSafeArea(.container, edges: .bottom)
+    }
+
+    private func voiceToastSlotWidth(for availableWidth: CGFloat) -> CGFloat {
+        guard stylePanelWidth > 0 else { return voiceToastWidth }
+
+        let trailingSpace = (availableWidth - stylePanelWidth) / 2 - voiceToastSpacing - 14
+        return min(voiceToastWidth, max(trailingSpace, 0))
     }
 
     private var zoomLevelBadge: some View {
@@ -332,46 +368,107 @@ struct ContentView: View {
         .accessibilityLabel("Zoom \(zoomTitle(for: boardZoomScale))")
     }
 
-    private var floatingStatusPanel: some View {
+    private func voiceToast(for note: SketchNote, width: CGFloat) -> some View {
         #if targetEnvironment(simulator)
-        statusPanel
+        voiceToastContent(for: note, width: width)
         #else
-        statusPanel
+        voiceToastContent(for: note, width: width)
             .allowsHitTesting(false)
         #endif
     }
 
-    private var statusPanel: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Label(
-                voiceController.statusMessage,
-                systemImage: voiceController.isListening ? "waveform" : "sparkles"
-            )
-            .font(.callout)
-            .foregroundStyle(voiceController.isListening ? .primary : .secondary)
+    private func voiceToastContent(for note: SketchNote, width: CGFloat) -> some View {
+        VStack(alignment: .leading, spacing: 5) {
+            HStack(spacing: 6) {
+                Image(systemName: voiceController.isListening ? "waveform" : "checkmark.circle.fill")
+                    .font(.caption)
+                    .foregroundStyle(voiceController.isListening ? .blue : .green)
+
+                Text(voiceToastTitle)
+                    .font(.caption)
+                    .foregroundStyle(.primary)
+                    .lineLimit(1)
+            }
 
             if !voiceController.transcript.isEmpty {
-                Text("Heard: \(voiceController.transcript)")
-                    .font(.caption)
+                Text(voiceController.transcript)
+                    .font(.caption2)
                     .foregroundStyle(.secondary)
+                    .lineLimit(1)
             }
 
             #if targetEnvironment(simulator)
-            HStack(spacing: 8) {
-                TextField("Simulator fallback: type red pen, blue pencil, yellow marker, or eraser", text: $typedVoiceCommand)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled()
-                    .textFieldStyle(.roundedBorder)
-                    .onSubmit(applyTypedVoiceCommand)
+            if !voiceController.isListening {
+                HStack(spacing: 6) {
+                    TextField("Type command", text: $typedVoiceCommand)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                        .textFieldStyle(.roundedBorder)
+                        .font(.caption)
+                        .onSubmit {
+                            applyTypedVoiceCommand(for: note)
+                        }
 
-                Button("Apply", action: applyTypedVoiceCommand)
+                    Button("Apply") {
+                        applyTypedVoiceCommand(for: note)
+                    }
+                    .font(.caption)
                     .disabled(typedVoiceCommand.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
             }
             #endif
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(14)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .frame(width: width, alignment: .leading)
+        .nativeGlassRoundedRectangle(cornerRadius: 16)
+    }
+
+    private var voiceToastTitle: String {
+        if voiceController.isListening {
+            if voiceController.transcript.isEmpty {
+                return "Listening..."
+            }
+
+            return "Recognizing"
+        }
+
+        return voiceController.statusMessage
+    }
+
+    private func toggleVoiceListening(for note: SketchNote, trigger: String) {
+        voiceStatusNoteID = note.id
+        voiceController.onCommand = { command in
+            canvasBridge.apply(command: command)
+        }
+
+        Task {
+            await voiceController.toggleListening(trigger: trigger)
+        }
+    }
+
+    private func clearVoiceStatus() {
+        voiceController.onCommand = nil
+        voiceController.clearStatus()
+        voiceStatusNoteID = nil
+        typedVoiceCommand = ""
+    }
+
+    private func applyTypedVoiceCommand(for note: SketchNote) {
+        voiceStatusNoteID = note.id
+
+        let commandText = typedVoiceCommand.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !commandText.isEmpty else { return }
+
+        if let command = InkCommand.parse(commandText) {
+            canvasBridge.apply(command: command)
+            voiceController.transcript = commandText
+            voiceController.showSimulatorFallbackStatus("Applied \(command.displayName) from the typed Simulator fallback.")
+            typedVoiceCommand = ""
+        } else {
+            voiceController.transcript = commandText
+            voiceController.showSimulatorFallbackStatus("Could not parse \"\(commandText)\".")
+        }
     }
 
     private func note(for id: UUID) -> SketchNote? {
@@ -449,21 +546,6 @@ struct ContentView: View {
         autosaveTask = Task { @MainActor in
             try? await Task.sleep(for: .milliseconds(450))
             try? modelContext.save()
-        }
-    }
-
-    private func applyTypedVoiceCommand() {
-        let commandText = typedVoiceCommand.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !commandText.isEmpty else { return }
-
-        if let command = InkCommand.parse(commandText) {
-            canvasBridge.apply(command: command)
-            voiceController.transcript = commandText
-            voiceController.statusMessage = "Applied \(command.displayName) from the typed Simulator fallback."
-            typedVoiceCommand = ""
-        } else {
-            voiceController.transcript = commandText
-            voiceController.statusMessage = "Could not parse \"\(commandText)\". Try red pen, blue pencil, yellow marker, or eraser."
         }
     }
 
@@ -631,7 +713,26 @@ private struct BoardBackButton: View {
     }
 }
 
+private struct WidthPreferenceKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
+    }
+}
+
 private extension View {
+    func measuredWidth(_ width: Binding<CGFloat>) -> some View {
+        background {
+            GeometryReader { proxy in
+                Color.clear.preference(key: WidthPreferenceKey.self, value: proxy.size.width)
+            }
+        }
+        .onPreferenceChange(WidthPreferenceKey.self) { newWidth in
+            width.wrappedValue = newWidth
+        }
+    }
+
     @ViewBuilder
     func nativeGlassCircle() -> some View {
         if #available(iOS 26.0, *) {
@@ -647,6 +748,17 @@ private extension View {
             glassEffect(.regular.interactive(), in: Capsule())
         } else {
             background(.ultraThinMaterial, in: Capsule())
+        }
+    }
+
+    @ViewBuilder
+    func nativeGlassRoundedRectangle(cornerRadius: CGFloat) -> some View {
+        let shape = RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+
+        if #available(iOS 26.0, *) {
+            glassEffect(.regular, in: shape)
+        } else {
+            background(.ultraThinMaterial, in: shape)
         }
     }
 }
