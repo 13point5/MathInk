@@ -56,6 +56,9 @@ struct ContentView: View {
                     systemImage: "scribble.variable",
                     description: Text("Create a sketch from the sidebar to start drawing.")
                 )
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color(uiColor: .systemBackground))
+                .ignoresSafeArea()
             }
         }
         .task {
@@ -80,11 +83,7 @@ struct ContentView: View {
     }
 
     private func editor(for note: SketchNote) -> some View {
-        VStack(spacing: 0) {
-            statusPanel
-                .padding([.horizontal, .top])
-                .padding(.bottom, 8)
-
+        ZStack(alignment: .topLeading) {
             DrawingCanvasView(
                 drawingData: Binding(
                     get: { note.drawingData },
@@ -94,10 +93,9 @@ struct ContentView: View {
             ) { updatedData in
                 updateDrawing(for: note, with: updatedData)
             }
-            .background(Color(uiColor: .secondarySystemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
-            .padding(.horizontal)
-            .padding(.bottom)
+            .background(Color(uiColor: .systemBackground))
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .ignoresSafeArea()
             .overlay(alignment: .bottom) {
                 StylePanel(
                     canvasBridge: canvasBridge,
@@ -121,9 +119,25 @@ struct ContentView: View {
                     await voiceController.toggleListening(trigger: "Apple Pencil squeeze")
                 }
             }
+
+            floatingStatusPanel
+                .padding(.horizontal, 24)
+                .padding(.top, 128)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(uiColor: .systemBackground))
+        .ignoresSafeArea()
         .navigationTitle(note.title)
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private var floatingStatusPanel: some View {
+        #if targetEnvironment(simulator)
+        statusPanel
+        #else
+        statusPanel
+            .allowsHitTesting(false)
+        #endif
     }
 
     private var statusPanel: some View {

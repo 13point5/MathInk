@@ -236,6 +236,9 @@
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "MathInk uses the microphone after a Pencil or button trigger so you can switch drawing tools by voice.";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "MathInk uses speech recognition to understand commands like red pen or blue pencil.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -244,7 +247,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.MathInk;
 				PRODUCT_NAME = MathInk;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;
 		};
@@ -325,6 +328,9 @@
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "MathInk uses the microphone after a Pencil or button trigger so you can switch drawing tools by voice.";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "MathInk uses speech recognition to understand commands like red pen or blue pencil.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -333,7 +339,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.MathInk;
 				PRODUCT_NAME = MathInk;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
 		};
