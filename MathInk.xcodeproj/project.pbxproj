@@ -39,9 +39,9 @@
 		C3B2BDAB5A0788305909CC69 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C49D70643CDE9EB73C05E54C /* MathInkApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathInkApp.swift; sourceTree = "<group>"; };
 		C7CB43E089A4D92ECCA32596 /* StylePanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StylePanel.swift; sourceTree = "<group>"; };
-		E1F19A12153801E203DCE493 /* MathInk.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = MathInk.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1F19A12153801E203DCE493 /* MathInk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MathInk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E62C7631F4E0ECBD614F31FC /* SketchNote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SketchNote.swift; sourceTree = "<group>"; };
-		F9ABE8E5F8E001ED9853E522 /* MathInkTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MathInkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F9ABE8E5F8E001ED9853E522 /* MathInkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MathInkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -133,7 +133,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 2640;
 				TargetAttributes = {
 					6FC758504C1788843893EE77 = {
 						ProvisioningStyle = Automatic;
@@ -289,6 +289,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -309,6 +310,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
@@ -399,6 +401,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -412,6 +415,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 6.0;

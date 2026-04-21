@@ -5,3 +5,8 @@ DerivedData/
 *.xcworkspace/xcuserdata/
 *.xcodeproj/xcuserdata/
 
+# Local signing and private configuration
+Local.xcconfig
+*.xcconfig.local
+*.mobileprovision
+*.provisionprofile
