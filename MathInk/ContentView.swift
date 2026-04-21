@@ -7,17 +7,24 @@ struct ContentView: View {
 
     @StateObject private var canvasBridge = CanvasBridge()
     @StateObject private var voiceController = VoiceCommandController()
+    @AppStorage("MathInk.sidebarVisibility") private var storedSidebarVisibility = "all"
+    @State private var columnVisibility: NavigationSplitViewVisibility
     @State private var selectedNoteID: UUID?
     @State private var autosaveTask: Task<Void, Never>?
     @State private var didSeed = false
     @State private var typedVoiceCommand = ""
+
+    init() {
+        let storedVisibility = UserDefaults.standard.string(forKey: "MathInk.sidebarVisibility") ?? "all"
+        _columnVisibility = State(initialValue: storedVisibility == "detailOnly" ? .detailOnly : .all)
+    }
 
     private var selectedNote: SketchNote? {
         notes.first(where: { $0.id == selectedNoteID })
     }
 
     var body: some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: $columnVisibility) {
             List(selection: $selectedNoteID) {
                 ForEach(notes) { note in
                     VStack(alignment: .leading, spacing: 4) {
@@ -57,6 +64,9 @@ struct ContentView: View {
                 canvasBridge.apply(command: command)
             }
         }
+        .onChange(of: columnVisibility) { _, newValue in
+            storedSidebarVisibility = newValue == .detailOnly ? "detailOnly" : "all"
+        }
         .onChange(of: notes.map(\.id)) { _, ids in
             guard selectedNoteID == nil || ids.contains(selectedNoteID!) else {
                 selectedNoteID = ids.first
@@ -71,34 +81,9 @@ struct ContentView: View {
 
     private func editor(for note: SketchNote) -> some View {
         VStack(spacing: 0) {
-            HStack(alignment: .top, spacing: 12) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(note.title)
-                        .font(.title2.weight(.semibold))
-                    Text("Say commands like red pen, blue pencil, yellow marker, or eraser.")
-                        .font(.callout)
-                        .foregroundStyle(.secondary)
-                }
-
-                Spacer(minLength: 12)
-
-                Button {
-                    Task {
-                        await voiceController.toggleListening(trigger: "the mic button")
-                    }
-                } label: {
-                    Label(
-                        voiceController.isListening ? "Stop Listening" : "Voice Tool",
-                        systemImage: voiceController.isListening ? "waveform.circle.fill" : "mic.circle"
-                    )
-                }
-                .buttonStyle(.borderedProminent)
-            }
-            .padding()
-
             statusPanel
-                .padding(.horizontal)
-                .padding(.bottom, 12)
+                .padding([.horizontal, .top])
+                .padding(.bottom, 8)
 
             DrawingCanvasView(
                 drawingData: Binding(
@@ -113,6 +98,17 @@ struct ContentView: View {
             .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
             .padding(.horizontal)
             .padding(.bottom)
+            .overlay(alignment: .bottom) {
+                StylePanel(
+                    canvasBridge: canvasBridge,
+                    startListening: {
+                        Task {
+                            await voiceController.toggleListening(trigger: "the style panel mic")
+                        }
+                    }
+                )
+                .padding(.bottom, 24)
+            }
             .onPencilDoubleTap { _ in
                 Task {
                     await voiceController.toggleListening(trigger: "Apple Pencil double tap")
@@ -128,23 +124,6 @@ struct ContentView: View {
         }
         .navigationTitle(note.title)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                Button {
-                    canvasBridge.showToolPicker()
-                } label: {
-                    Label("Show Tools", systemImage: "pencil.tip.crop.circle")
-                }
-
-                Button {
-                    Task {
-                        await voiceController.toggleListening(trigger: "the toolbar button")
-                    }
-                } label: {
-                    Label("Voice Tool", systemImage: "mic")
-                }
-            }
-        }
     }
 
     private var statusPanel: some View {
@@ -162,6 +141,7 @@ struct ContentView: View {
                     .foregroundStyle(.secondary)
             }
 
+            #if targetEnvironment(simulator)
             HStack(spacing: 8) {
                 TextField("Simulator fallback: type red pen, blue pencil, yellow marker, or eraser", text: $typedVoiceCommand)
                     .textInputAutocapitalization(.never)
@@ -172,6 +152,7 @@ struct ContentView: View {
                 Button("Apply", action: applyTypedVoiceCommand)
                     .disabled(typedVoiceCommand.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
+            #endif
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)

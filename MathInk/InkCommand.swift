@@ -22,7 +22,7 @@ struct InkCommand: Equatable, Sendable {
         var uiColor: UIColor {
             switch self {
             case .black:
-                return .label
+                return .black
             case .blue:
                 return .systemBlue
             case .green:

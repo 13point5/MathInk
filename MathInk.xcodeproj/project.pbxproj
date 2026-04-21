@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2A668272BEE5D420BE3FBCC2 /* MathInkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C49D70643CDE9EB73C05E54C /* MathInkApp.swift */; };
+		6A2D194974FECEB1027B64B4 /* StylePanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CB43E089A4D92ECCA32596 /* StylePanel.swift */; };
 		94EB308BA96030C6954A22C3 /* InkCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF1ACFE64FB0C95F9118AC9 /* InkCommand.swift */; };
 		9552B8840DDF82549B79D277 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12596E5BF473FD32E9277852 /* Assets.xcassets */; };
 		A9F445FB1D91158559DF57D4 /* VoiceCommandController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E25CDE603FE3FDAD7B9E573 /* VoiceCommandController.swift */; };
@@ -37,7 +38,8 @@
 		C3A97E5D2F6E13C244526543 /* InkCommandTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InkCommandTests.swift; sourceTree = "<group>"; };
 		C3B2BDAB5A0788305909CC69 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C49D70643CDE9EB73C05E54C /* MathInkApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathInkApp.swift; sourceTree = "<group>"; };
-		E1F19A12153801E203DCE493 /* MathInk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MathInk.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C7CB43E089A4D92ECCA32596 /* StylePanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StylePanel.swift; sourceTree = "<group>"; };
+		E1F19A12153801E203DCE493 /* MathInk.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = MathInk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E62C7631F4E0ECBD614F31FC /* SketchNote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SketchNote.swift; sourceTree = "<group>"; };
 		F9ABE8E5F8E001ED9853E522 /* MathInkTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MathInkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -62,6 +64,7 @@
 				9AF1ACFE64FB0C95F9118AC9 /* InkCommand.swift */,
 				C49D70643CDE9EB73C05E54C /* MathInkApp.swift */,
 				E62C7631F4E0ECBD614F31FC /* SketchNote.swift */,
+				C7CB43E089A4D92ECCA32596 /* StylePanel.swift */,
 				0E25CDE603FE3FDAD7B9E573 /* VoiceCommandController.swift */,
 			);
 			path = MathInk;
@@ -187,6 +190,7 @@
 				94EB308BA96030C6954A22C3 /* InkCommand.swift in Sources */,
 				2A668272BEE5D420BE3FBCC2 /* MathInkApp.swift in Sources */,
 				F53CB420762294139C4217D5 /* SketchNote.swift in Sources */,
+				6A2D194974FECEB1027B64B4 /* StylePanel.swift in Sources */,
 				A9F445FB1D91158559DF57D4 /* VoiceCommandController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -227,7 +231,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = AHG9T77VS6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = MathInk;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "MathInk uses the microphone after a Pencil or button trigger so you can switch drawing tools by voice.";
@@ -317,7 +320,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = AHG9T77VS6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = MathInk;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "MathInk uses the microphone after a Pencil or button trigger so you can switch drawing tools by voice.";

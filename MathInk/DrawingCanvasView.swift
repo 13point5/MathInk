@@ -23,12 +23,7 @@ struct DrawingCanvasView: UIViewRepresentable {
             canvasView.drawing = drawing
         }
 
-        let toolPicker = PKToolPicker()
-        context.coordinator.toolPicker = toolPicker
-        toolPicker.addObserver(canvasView)
-        toolPicker.setVisible(true, forFirstResponder: canvasView)
-
-        canvasBridge.attach(canvasView: canvasView, toolPicker: toolPicker)
+        canvasBridge.attach(canvasView: canvasView)
 
         DispatchQueue.main.async {
             canvasView.becomeFirstResponder()
@@ -39,10 +34,7 @@ struct DrawingCanvasView: UIViewRepresentable {
 
     func updateUIView(_ uiView: PKCanvasView, context: Context) {
         context.coordinator.parent = self
-        canvasBridge.attach(
-            canvasView: uiView,
-            toolPicker: context.coordinator.toolPicker ?? PKToolPicker()
-        )
+        canvasBridge.attach(canvasView: uiView)
 
         let currentData = uiView.drawing.dataRepresentation()
         guard currentData != drawingData else { return }
@@ -56,7 +48,6 @@ struct DrawingCanvasView: UIViewRepresentable {
 
     final class Coordinator: NSObject, PKCanvasViewDelegate {
         var parent: DrawingCanvasView
-        var toolPicker: PKToolPicker?
 
         init(parent: DrawingCanvasView) {
             self.parent = parent
@@ -67,4 +58,3 @@ struct DrawingCanvasView: UIViewRepresentable {
         }
     }
 }
-
