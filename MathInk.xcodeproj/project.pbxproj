@@ -1,0 +1,447 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2A668272BEE5D420BE3FBCC2 /* MathInkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C49D70643CDE9EB73C05E54C /* MathInkApp.swift */; };
+		94EB308BA96030C6954A22C3 /* InkCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF1ACFE64FB0C95F9118AC9 /* InkCommand.swift */; };
+		9552B8840DDF82549B79D277 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12596E5BF473FD32E9277852 /* Assets.xcassets */; };
+		A9F445FB1D91158559DF57D4 /* VoiceCommandController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E25CDE603FE3FDAD7B9E573 /* VoiceCommandController.swift */; };
+		B70B1E9B3B81F0DAE03F66EC /* DrawingCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64F6F27D43D975E4DFD693A /* DrawingCanvasView.swift */; };
+		C32FC31945B6BCE7DE5CDAB9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B2BDAB5A0788305909CC69 /* ContentView.swift */; };
+		D2F76701EC6414A8F40CE492 /* CanvasBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E7C17F24AD3579E132D6AB /* CanvasBridge.swift */; };
+		F53CB420762294139C4217D5 /* SketchNote.swift in Sources */ = {isa = PBXBuildFile; fileRef = E62C7631F4E0ECBD614F31FC /* SketchNote.swift */; };
+		FB9C3030CA94AF3B28D7E5D4 /* InkCommandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A97E5D2F6E13C244526543 /* InkCommandTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		36DB4545A3100DE70FC6EDEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 139F2BBB182A7C3FBCD0121B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6FC758504C1788843893EE77;
+			remoteInfo = MathInk;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0E25CDE603FE3FDAD7B9E573 /* VoiceCommandController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceCommandController.swift; sourceTree = "<group>"; };
+		12596E5BF473FD32E9277852 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		65E7C17F24AD3579E132D6AB /* CanvasBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasBridge.swift; sourceTree = "<group>"; };
+		9AF1ACFE64FB0C95F9118AC9 /* InkCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InkCommand.swift; sourceTree = "<group>"; };
+		B64F6F27D43D975E4DFD693A /* DrawingCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingCanvasView.swift; sourceTree = "<group>"; };
+		C3A97E5D2F6E13C244526543 /* InkCommandTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InkCommandTests.swift; sourceTree = "<group>"; };
+		C3B2BDAB5A0788305909CC69 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		C49D70643CDE9EB73C05E54C /* MathInkApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathInkApp.swift; sourceTree = "<group>"; };
+		E1F19A12153801E203DCE493 /* MathInk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MathInk.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E62C7631F4E0ECBD614F31FC /* SketchNote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SketchNote.swift; sourceTree = "<group>"; };
+		F9ABE8E5F8E001ED9853E522 /* MathInkTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MathInkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		26F739ACA528403C8396B25B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E1F19A12153801E203DCE493 /* MathInk.app */,
+				F9ABE8E5F8E001ED9853E522 /* MathInkTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		31C55EC0ECF96FDAAAA836AB /* MathInk */ = {
+			isa = PBXGroup;
+			children = (
+				12596E5BF473FD32E9277852 /* Assets.xcassets */,
+				65E7C17F24AD3579E132D6AB /* CanvasBridge.swift */,
+				C3B2BDAB5A0788305909CC69 /* ContentView.swift */,
+				B64F6F27D43D975E4DFD693A /* DrawingCanvasView.swift */,
+				9AF1ACFE64FB0C95F9118AC9 /* InkCommand.swift */,
+				C49D70643CDE9EB73C05E54C /* MathInkApp.swift */,
+				E62C7631F4E0ECBD614F31FC /* SketchNote.swift */,
+				0E25CDE603FE3FDAD7B9E573 /* VoiceCommandController.swift */,
+			);
+			path = MathInk;
+			sourceTree = "<group>";
+		};
+		58F8DBA94943C7990D056505 /* MathInkTests */ = {
+			isa = PBXGroup;
+			children = (
+				C3A97E5D2F6E13C244526543 /* InkCommandTests.swift */,
+			);
+			path = MathInkTests;
+			sourceTree = "<group>";
+		};
+		EC4177BA16C7A40947448023 = {
+			isa = PBXGroup;
+			children = (
+				31C55EC0ECF96FDAAAA836AB /* MathInk */,
+				58F8DBA94943C7990D056505 /* MathInkTests */,
+				26F739ACA528403C8396B25B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		49EF3365B93332D16F103423 /* MathInkTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9649C6AEEF53D8BBD7DA66A7 /* Build configuration list for PBXNativeTarget "MathInkTests" */;
+			buildPhases = (
+				232E9E2723EF8612DFC8EC8C /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1B3D450BE8489672DCABE084 /* PBXTargetDependency */,
+			);
+			name = MathInkTests;
+			packageProductDependencies = (
+			);
+			productName = MathInkTests;
+			productReference = F9ABE8E5F8E001ED9853E522 /* MathInkTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		6FC758504C1788843893EE77 /* MathInk */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 38DF8D441B0E9145C6957E20 /* Build configuration list for PBXNativeTarget "MathInk" */;
+			buildPhases = (
+				428935935F5E08142F3199DB /* Sources */,
+				4C442206FA9707081FDC7FCD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MathInk;
+			packageProductDependencies = (
+			);
+			productName = MathInk;
+			productReference = E1F19A12153801E203DCE493 /* MathInk.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		139F2BBB182A7C3FBCD0121B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					6FC758504C1788843893EE77 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = DD8B2F35D9CEB397068D75E8 /* Build configuration list for PBXProject "MathInk" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = EC4177BA16C7A40947448023;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 26F739ACA528403C8396B25B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6FC758504C1788843893EE77 /* MathInk */,
+				49EF3365B93332D16F103423 /* MathInkTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4C442206FA9707081FDC7FCD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9552B8840DDF82549B79D277 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		232E9E2723EF8612DFC8EC8C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FB9C3030CA94AF3B28D7E5D4 /* InkCommandTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		428935935F5E08142F3199DB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2F76701EC6414A8F40CE492 /* CanvasBridge.swift in Sources */,
+				C32FC31945B6BCE7DE5CDAB9 /* ContentView.swift in Sources */,
+				B70B1E9B3B81F0DAE03F66EC /* DrawingCanvasView.swift in Sources */,
+				94EB308BA96030C6954A22C3 /* InkCommand.swift in Sources */,
+				2A668272BEE5D420BE3FBCC2 /* MathInkApp.swift in Sources */,
+				F53CB420762294139C4217D5 /* SketchNote.swift in Sources */,
+				A9F445FB1D91158559DF57D4 /* VoiceCommandController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1B3D450BE8489672DCABE084 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6FC758504C1788843893EE77 /* MathInk */;
+			targetProxy = 36DB4545A3100DE70FC6EDEE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		B0532E0FB5F6121012F19528 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.MathInkTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MathInk.app/MathInk";
+			};
+			name = Debug;
+		};
+		B1E05A53EF89CB58F72D89A7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = AHG9T77VS6;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = MathInk;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "MathInk uses the microphone after a Pencil or button trigger so you can switch drawing tools by voice.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "MathInk uses speech recognition to understand commands like red pen or blue pencil.";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.MathInk;
+				PRODUCT_NAME = MathInk;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		BD831731D0DCA86C5F2D1B1D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		C99E17C0E9386DF435174E50 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = AHG9T77VS6;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = MathInk;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "MathInk uses the microphone after a Pencil or button trigger so you can switch drawing tools by voice.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "MathInk uses speech recognition to understand commands like red pen or blue pencil.";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.MathInk;
+				PRODUCT_NAME = MathInk;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D562D549AB20201E9E72036E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.MathInkTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MathInk.app/MathInk";
+			};
+			name = Release;
+		};
+		D88BE09205A3AFED2A7E0C05 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		38DF8D441B0E9145C6957E20 /* Build configuration list for PBXNativeTarget "MathInk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C99E17C0E9386DF435174E50 /* Debug */,
+				B1E05A53EF89CB58F72D89A7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		9649C6AEEF53D8BBD7DA66A7 /* Build configuration list for PBXNativeTarget "MathInkTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B0532E0FB5F6121012F19528 /* Debug */,
+				D562D549AB20201E9E72036E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		DD8B2F35D9CEB397068D75E8 /* Build configuration list for PBXProject "MathInk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BD831731D0DCA86C5F2D1B1D /* Debug */,
+				D88BE09205A3AFED2A7E0C05 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 139F2BBB182A7C3FBCD0121B /* Project object */;
+}

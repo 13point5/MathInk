@@ -1,0 +1,44 @@
+name: MathInk
+options:
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: 6.0
+    CURRENT_PROJECT_VERSION: 1
+    MARKETING_VERSION: 0.1.0
+    TARGETED_DEVICE_FAMILY: 2
+targets:
+  MathInk:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.5"
+    sources:
+      - path: MathInk
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.MathInk
+        PRODUCT_NAME: MathInk
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGN_STYLE: Automatic
+        INFOPLIST_KEY_CFBundleDisplayName: MathInk
+        INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
+        INFOPLIST_KEY_NSMicrophoneUsageDescription: MathInk uses the microphone after a Pencil or button trigger so you can switch drawing tools by voice.
+        INFOPLIST_KEY_NSSpeechRecognitionUsageDescription: MathInk uses speech recognition to understand commands like red pen or blue pencil.
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+    scheme:
+      testTargets:
+        - MathInkTests
+  MathInkTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "17.5"
+    sources:
+      - path: MathInkTests
+    dependencies:
+      - target: MathInk
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.MathInkTests
+        GENERATE_INFOPLIST_FILE: YES
+
